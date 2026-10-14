@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photo Resizer | 35 × 45 mm</title>
+<style>
+:root{--navy:#153a63;--blue:#2478e5;--pale:#eef6ff;--ink:#17263c;--muted:#617189;--line:#dce6f1;--green:#138a58;--bg:#f5f8fc}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink)}
+header{margin:18px auto 20px;max-width:1500px;width:calc(100% - 36px);padding:24px 28px;border-radius:20px;background:linear-gradient(115deg,#17466f,#2c679a);color:white;display:flex;justify-content:space-between;align-items:center;gap:20px;box-shadow:0 10px 30px #173b5d18}
+header h1{margin:0 0 8px;font-size:clamp(22px,3vw,34px);letter-spacing:-.6px}header p{margin:0;color:#e4effa;font-size:15px;line-height:1.5}.size-pill{padding:15px 18px;border:1px solid #ffffff50;background:#ffffff12;border-radius:14px;min-width:180px;font-weight:700}.size-pill small{display:block;font-weight:400;margin-top:5px;color:#e4effa}
+main{max-width:1500px;width:calc(100% - 36px);margin:auto;display:grid;grid-template-columns:minmax(270px,.88fr) minmax(320px,1.1fr) minmax(270px,.85fr);gap:18px;align-items:stretch}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 4px 18px #1e3b5b08;min-width:0}.panel h2{font-size:19px;margin:0 0 18px}.step{display:flex;gap:10px;align-items:center;margin:0 0 14px;font-weight:750;font-size:17px}.number{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:10px;background:var(--blue);color:white}
+.drop{border:2px dashed #a9c1dd;border-radius:14px;padding:25px 14px;text-align:center;background:#f5f9ff;cursor:pointer;transition:.2s}.drop:hover,.drop.drag{border-color:var(--blue);background:#eaf4ff}.drop .cloud{font-size:35px;color:var(--blue)}.drop strong{display:block;margin:8px 0 5px}.drop span{font-size:13px;color:var(--muted)}input[type=file]{display:none}
+.meta{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px;margin:12px 0 20px}.rule{border:0;border-top:1px solid var(--line);margin:20px 0}.control-label{display:flex;justify-content:space-between;gap:12px;font-size:14px;font-weight:650;margin:14px 0 8px}.range{width:100%;accent-color:var(--blue)}.move-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.move-grid button,.secondary{background:#f7faff;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:10px;cursor:pointer;font-size:16px}.move-grid button:hover,.secondary:hover{border-color:var(--blue)}
+.auto-crop{width:100%;margin:0 0 12px;background:#1769c2;color:#fff;border:0;border-radius:11px;padding:12px;font-weight:750;cursor:pointer}.auto-crop:hover{background:#1256a0}.drag-tip{font-size:12px;color:var(--muted);margin:8px 0 12px;line-height:1.5}.photo-frame{touch-action:none;cursor:grab}.photo-frame:active{cursor:grabbing}.fine-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.fine-controls button{border:1px solid var(--line);border-radius:9px;background:white;padding:8px;cursor:pointer;font-size:12px}.radio-list{display:grid;gap:11px}.radio-list label{display:flex;gap:9px;align-items:center;font-size:14px;cursor:pointer}.radio-list input{accent-color:var(--blue)}
+.preview-panel{background:linear-gradient(180deg,#edf6ff,#f7fbff);display:flex;flex-direction:column}.preview-stage{flex:1;display:flex;align-items:center;justify-content:center;min-height:450px;padding:8px}.photo-frame{position:relative;width:min(100%,300px);aspect-ratio:7/9;background:white;border:2px solid #7ca6d2;box-shadow:0 8px 25px #1e4e7718;overflow:hidden}.photo-frame canvas{display:block;width:100%;height:100%;object-fit:cover}.guides{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,transparent 24.8%,#ffffff8c 25%,transparent 25.2%,transparent 49.8%,#ffffff8c 50%,transparent 50.2%,transparent 74.8%,#ffffff8c 75%,transparent 75.2%),linear-gradient(to right,transparent 49.8%,#ffffff8c 50%,transparent 50.2%)}.measure{font-size:13px;color:#3c5674;text-align:center;margin-bottom:12px}.helper{font-size:12px;color:var(--muted);text-align:center;line-height:1.5;margin:12px 0 0}.result-panel{background:linear-gradient(180deg,#f0fbf5,#fff);border-color:#d7efdf}.result-box{display:flex;justify-content:center;align-items:center;padding:8px 0 18px}.result-photo{width:min(72%,210px);aspect-ratio:7/9;background:#fff;border:1px solid #c8d3df;box-shadow:0 4px 15px #173b5d10;overflow:hidden}.result-photo canvas{width:100%;height:100%;display:block}.details{display:grid;grid-template-columns:1fr auto;gap:13px 10px;font-size:13px;margin:0 0 22px}.details span:nth-child(odd){color:var(--muted)}.details span:nth-child(even){font-weight:650;text-align:right}.btn{width:100%;border:0;border-radius:12px;padding:14px 16px;font-weight:750;font-size:15px;cursor:pointer}.download{background:var(--green);color:white;box-shadow:0 6px 16px #138a5825}.download:hover{background:#0e754a}.secondary.full{margin-top:10px;background:white}.btn:disabled{opacity:.45;cursor:not-allowed}.status{font-size:12px;color:var(--muted);text-align:center;line-height:1.5;margin-top:13px}.foot{max-width:1500px;width:calc(100% - 36px);margin:18px auto 28px;color:var(--muted);font-size:12px;line-height:1.6}.notice{padding:10px 12px;border-radius:10px;background:#fff7e8;color:#79531a;font-size:12px;margin-top:16px;line-height:1.5}
+@media(max-width:1050px){main{grid-template-columns:1fr 1fr}.preview-panel{grid-column:1/-1;grid-row:1}.preview-stage{min-height:390px}.panel{padding:18px}}
+@media(max-width:650px){header{align-items:flex-start;flex-direction:column;padding:20px}main{grid-template-columns:1fr}.preview-panel{grid-column:auto;grid-row:auto}.preview-stage{min-height:360px}.size-pill{width:100%}.panel{padding:18px}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Photo Resizer — 3.5 × 4.5 cm</h1><p>Upload, crop and download a photo for ID cards, forms and applications.</p></div>
+  <div class="size-pill">35 × 45 mm <small>Print size · 300 DPI export</small></div>
+</header>
+<main>
+  <section class="panel">
+    <div class="step"><span class="number">1</span> Upload photo</div>
+    <label class="drop" id="drop" for="file">
+      <div class="cloud">⇧</div><strong>Choose a photo</strong><div>or drag and drop it here</div><span>JPG, JPEG, PNG, WEBP · processed on this device</span>
+    </label>
+    <input id="file" type="file" accept="image/jpeg,image/png,image/webp">
+    <div class="meta"><span>Recommended: clear, front-facing photo</span><span id="fileName">No file selected</span></div>
+    <hr class="rule">
+    <div class="step"><span class="number">2</span> Adjust photo</div>
+    <button class="auto-crop" id="autoCrop" type="button">✦ Auto Face Crop</button>
+    <p class="drag-tip">Tip: After cropping, drag the photo directly inside the preview to position it freely.</p>
+    <div class="control-label"><label for="zoom">Zoom</label><span id="zoomValue">100%</span></div>
+    <input class="range" id="zoom" type="range" min="100" max="250" value="100">
+    <div class="control-label"><span>Move photo</span><span style="font-weight:400;color:var(--muted)">Fine adjustment</span></div>
+    <div class="move-grid">
+      <button type="button" data-move="up" aria-label="Move up">↑</button><button type="button" data-move="down" aria-label="Move down">↓</button><button type="button" data-move="left" aria-label="Move left">←</button><button type="button" data-move="right" aria-label="Move right">→</button>
+    </div>
+    <div class="fine-controls"><button type="button" id="centerPhoto">Center photo</button><button type="button" id="fitPhoto">Fit photo</button></div>
+    <hr class="rule">
+    <div class="step"><span class="number">3</span> Background</div>
+    <div class="radio-list">
+      <label><input type="radio" name="bg" value="original" checked> Keep original background</label>
+      <label><input type="radio" name="bg" value="#ffffff"> White background (fills canvas only)</label>
+      <label><input type="radio" name="bg" value="#dceeff"> Light blue background (fills canvas only)</label>
+    </div>
+    <div class="notice">Background choices change the canvas behind the photo; they do not automatically remove the original background around a person.</div>
+  </section>
+
+  <section class="panel preview-panel">
+    <h2>Preview &amp; crop</h2>
+    <div class="measure">Width: 3.5 cm (35 mm) · Height: 4.5 cm (45 mm)</div>
+    <div class="preview-stage">
+      <div class="photo-frame"><canvas id="preview" width="413" height="531"></canvas><div class="guides"></div></div>
+    </div>
+    <p class="helper">Use zoom and arrows to position your face inside the frame.<br>Dashed guides are for alignment only and won't appear in the download.</p>
+  </section>
+
+  <section class="panel result-panel">
+    <h2>Final photo</h2>
+    <div class="result-box"><div class="result-photo"><canvas id="result" width="413" height="531"></canvas></div></div>
+    <div class="details"><span>Print size</span><span>3.5 × 4.5 cm</span><span>Export resolution</span><span>413 × 531 px</span><span>Resolution target</span><span>300 DPI</span><span>Format</span><span>JPG</span></div>
+    <button class="btn download" id="download" disabled>↓ &nbsp; Download photo (JPG)</button>
+    <button class="btn secondary full" id="reset" type="button">Reset adjustments</button>
+    <p class="status" id="status">Upload a photo to begin. Your image stays in your browser.</p>
+  </section>
+</main>
+<div class="foot">Note: 413 × 531 px is a practical approximation for 35 × 45 mm at 300 DPI. Some applications require specific head size, background, or pixel dimensions—check the receiving authority's instructions before submitting.</div>
+<script>
+(() => {
+  const fileInput = document.getElementById('file');
+  const drop = document.getElementById('drop');
+  const preview = document.getElementById('preview');
+  const result = document.getElementById('result');
+  const pctx = preview.getContext('2d');
+  const rctx = result.getContext('2d');
+  const zoom = document.getElementById('zoom');
+  const zoomValue = document.getElementById('zoomValue');
+  const fileName = document.getElementById('fileName');
+  const status = document.getElementById('status');
+  const download = document.getElementById('download');
+  let img = null, scale = 1, offsetX = 0, offsetY = 0, bg = 'original';
+  let dragging = false, dragStart = null;
+
+  function placeholder(ctx, w, h) {
+    ctx.clearRect(0,0,w,h); ctx.fillStyle = '#edf4fb'; ctx.fillRect(0,0,w,h);
+    ctx.fillStyle = '#8ba4bf'; ctx.textAlign='center'; ctx.font='bold 18px Arial';
+    ctx.fillText('Your photo preview',w/2,h/2-8); ctx.font='14px Arial';
+    ctx.fillText('Upload an image to begin',w/2,h/2+18);
+  }
+  placeholder(pctx,413,531); placeholder(rctx,413,531);
+
+  function draw(ctx, canvas) {
+    const w=canvas.width,h=canvas.height;
+    ctx.clearRect(0,0,w,h);
+    if (bg !== 'original') { ctx.fillStyle=bg; ctx.fillRect(0,0,w,h); }
+    else { ctx.fillStyle='#fff'; ctx.fillRect(0,0,w,h); }
+    if (!img) { placeholder(ctx,w,h); return; }
+    const base=Math.max(w/img.naturalWidth,h/img.naturalHeight);
+    const s=base*scale, dw=img.naturalWidth*s, dh=img.naturalHeight*s;
+    const x=(w-dw)/2+offsetX, y=(h-dh)/2+offsetY;
+    ctx.save(); ctx.beginPath();ctx.rect(0,0,w,h);ctx.clip();
+    ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+    ctx.drawImage(img,x,y,dw,dh);ctx.restore();
+  }
+  function redraw(){draw(pctx,preview);draw(rctx,result);zoomValue.textContent=zoom.value+'%';}
+  function loadFile(file) {
+    if(!file) return;
+    if(!/^image\/(jpeg|png|webp)$/.test(file.type)){status.textContent='Please choose a JPG, PNG or WEBP image.';return;}
+    const url=URL.createObjectURL(file), image=new Image();
+    image.onload=()=>{if(img && img.src.startsWith('blob:'))URL.revokeObjectURL(img.src);img=image;scale=1;offsetX=0;offsetY=0;zoom.value=100;fileName.textContent=file.name;download.disabled=false;status.textContent='Photo ready. Adjust the crop, then download.';redraw();};
+    image.onerror=()=>{URL.revokeObjectURL(url);status.textContent='Could not open this image. Try another file.';};
+    image.src=url;
+  }
+  fileInput.addEventListener('change',e=>loadFile(e.target.files[0]));
+  ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag');}));
+  ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag');}));
+  drop.addEventListener('drop',e=>loadFile(e.dataTransfer.files[0]));
+  zoom.addEventListener('input',()=>{scale=Number(zoom.value)/100;redraw();});
+  // Free drag directly on the preview. Offsets are measured in preview-canvas pixels.
+  const frame=document.querySelector('.photo-frame');
+  frame.addEventListener('pointerdown',e=>{if(!img)return;dragging=true;dragStart={x:e.clientX,y:e.clientY,ox:offsetX,oy:offsetY};frame.setPointerCapture(e.pointerId);});
+  frame.addEventListener('pointermove',e=>{if(!dragging||!dragStart)return;const rect=preview.getBoundingClientRect();offsetX=dragStart.ox+(e.clientX-dragStart.x)*(preview.width/rect.width);offsetY=dragStart.oy+(e.clientY-dragStart.y)*(preview.height/rect.height);redraw();});
+  ['pointerup','pointercancel'].forEach(ev=>frame.addEventListener(ev,()=>{dragging=false;dragStart=null;}));
+  document.getElementById('centerPhoto').addEventListener('click',()=>{offsetX=0;offsetY=0;redraw();});
+  document.getElementById('fitPhoto').addEventListener('click',()=>{if(!img)return;scale=1;offsetX=0;offsetY=0;zoom.value=100;redraw();});
+  // Face detector loads on demand from MediaPipe. Internet is required for the detector/model.
+  document.getElementById('autoCrop').addEventListener('click',async()=>{
+    if(!img){status.textContent='Please upload a photo first.';return;}
+    const btn=document.getElementById('autoCrop');btn.disabled=true;btn.textContent='Detecting face…';status.textContent='Loading face detector. Internet is needed for automatic face detection.';
+    try{
+      const vision=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/+esm');
+      const fileset=await vision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
+      const detector=await vision.FaceDetector.createFromOptions(fileset,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite',delegate:'CPU'},runningMode:'IMAGE',minDetectionConfidence:0.45});
+      const detections=detector.detect(img).detections;detector.close();
+      if(!detections||!detections.length){status.textContent='No face detected. Try a clear, front-facing photo, or adjust manually.';return;}
+      const box=detections.sort((a,b)=>(b.categories?.[0]?.score||0)-(a.categories?.[0]?.score||0))[0].boundingBox;
+      const iw=img.naturalWidth,ih=img.naturalHeight;
+      const fx=box.originX+box.width/2, fy=box.originY+box.height/2;
+      // Target face height ~58% of output frame, leaving room above the head and shoulders.
+      const targetFaceH=preview.height*0.58;
+      scale=Math.max(1,Math.min(2.5,targetFaceH/(box.height*Math.max(preview.width/iw,preview.height/ih))));
+      zoom.value=Math.round(scale*100);
+      const base=Math.max(preview.width/iw,preview.height/ih), effective=base*scale;
+      offsetX=preview.width/2-fx*effective;
+      offsetY=preview.height*0.40-fy*effective;
+      // Keep the photo covering the full output frame.
+      const dw=iw*effective,dh=ih*effective;
+      offsetX=Math.min(0,Math.max(preview.width-dw,offsetX));offsetY=Math.min(0,Math.max(preview.height-dh,offsetY));
+      redraw();status.textContent='Face detected. Check the crop and use drag/zoom to fine-tune it before downloading.';
+    }catch(err){console.error(err);status.textContent='Automatic face detection could not load. Check your internet connection, then try again; manual crop still works.';}
+    finally{btn.disabled=false;btn.textContent='✦ Auto Face Crop';}
+  });
+  document.querySelectorAll('[data-move]').forEach(btn=>btn.addEventListener('click',()=>{
+    const step=12;
+    if(btn.dataset.move==='up')offsetY+=step;
+    if(btn.dataset.move==='down')offsetY-=step;
+    if(btn.dataset.move==='left')offsetX+=step;
+    if(btn.dataset.move==='right')offsetX-=step;
+    redraw();
+  }));
+  document.querySelectorAll('input[name="bg"]').forEach(r=>r.addEventListener('change',()=>{bg=r.value;redraw();}));
+  download.addEventListener('click',()=>{
+    if(!img)return;
+    const out=document.createElement('canvas');out.width=413;out.height=531;
+    draw(out.getContext('2d'),out);
+    out.toBlob(blob=>{
+      if(!blob){status.textContent='Export failed. Please try again.';return;}
+      const a=document.createElement('a');const url=URL.createObjectURL(blob);
+      a.href=url;a.download='photo_35x45mm.jpg';document.body.appendChild(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1000);
+      status.textContent='Download prepared: photo_35x45mm.jpg';
+    },'image/jpeg',0.95);
+  });
+  document.getElementById('reset').addEventListener('click',()=>{
+    scale=1;offsetX=0;offsetY=0;zoom.value=100;bg='original';
+    document.querySelector('input[name="bg"][value="original"]').checked=true;redraw();
+    status.textContent=img?'Adjustments reset. Your photo is ready.':'Upload a photo to begin. Your image stays in your browser.';
+  });
+})();
+</script>
+</body>
+</html>
